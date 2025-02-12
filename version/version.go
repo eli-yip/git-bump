@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/manifoldco/promptui"
+	"github.com/charmbracelet/huh"
 )
 
 type Spec int
@@ -85,20 +85,24 @@ func (vm *VersionManager) FormatVersion(v *semver.Version) string {
 }
 
 func (vm *VersionManager) PromptVersion() (*semver.Version, error) {
-	validate := func(input string) error {
-		_, err := semver.NewVersion(input)
-		return err
-	}
+	var version string
 
-	prompt := promptui.Prompt{
-		Label:    "New version",
-		Validate: validate,
-	}
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewInput().
+				Title("New version").
+				Value(&version).
+				Validate(func(s string) error {
+					_, err := semver.NewVersion(s)
+					return err
+				}),
+		),
+	)
 
-	v, err := prompt.Run()
+	err := form.Run()
 	if err != nil {
 		return nil, err
 	}
 
-	return semver.NewVersion(v)
+	return semver.NewVersion(version)
 }
