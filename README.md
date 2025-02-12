@@ -9,8 +9,10 @@ This is a minimalist tool designed for automatically incrementing version number
 ```bash
 # git-bump will automatically increment the Patch version by default.
 git-bump
-# Use git-bump patch/minor/major to specify which version to increment.
-git-bump patch/minor/major
+# Use git-bump --patch/--minor/--major to specify which version to increment.
+git-bump --patch
+git-bump --minor
+git-bump --major
 # If no tags exist in the repository, the tool will prompt you to input an initial version number.
 git-bump
 ```
