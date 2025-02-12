@@ -7,14 +7,7 @@ import (
 	"gitea.darkeli.com/yezi/git-bump/cli"
 )
 
-var (
-	Version  = "unset"
-	Revision = "unset"
-)
-
-func main() {
-	os.Exit(run(os.Args[1:]))
-}
+func main() { os.Exit(run(os.Args[1:])) }
 
 func run(args []string) int {
 	var opts cli.Options

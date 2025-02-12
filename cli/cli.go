@@ -6,15 +6,17 @@ import (
 	"os"
 
 	"gitea.darkeli.com/yezi/git-bump/git"
+	vv "gitea.darkeli.com/yezi/git-bump/internal/version"
 	"gitea.darkeli.com/yezi/git-bump/version"
 	"github.com/Masterminds/semver/v3"
 	"github.com/jessevdk/go-flags"
 )
 
 type Options struct {
-	Major bool `long:"major" description:"Bump up major version"`
-	Minor bool `long:"minor" description:"Bump up minor version"`
-	Patch bool `long:"patch" description:"Bump up patch version"`
+	Major   bool `long:"major" description:"Bump up major version"`
+	Minor   bool `long:"minor" description:"Bump up minor version"`
+	Patch   bool `long:"patch" description:"Bump up patch version"`
+	Version bool `long:"version" short:"v" description:"Show current version"`
 }
 
 type CLI struct {
@@ -40,6 +42,11 @@ func (c *CLI) ParseArgs(args []string) ([]string, error) {
 }
 
 func (c *CLI) Run(args []string) error {
+	if c.Options.Version {
+		fmt.Fprintln(c.Stdout, vv.Version)
+		return nil
+	}
+
 	path := "."
 	if len(args) > 0 {
 		path = args[0]
