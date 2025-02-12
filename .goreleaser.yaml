@@ -1,0 +1,26 @@
+version: 2
+
+builds:
+  - env:
+      - CGO_ENABLED=0
+      - GOPROXY=https://goproxy.cn,direct
+    goos: [darwin, linux]
+    goarch: [arm64, amd64]
+    goamd64:
+      - v1
+      - v3
+    ignore:
+      - goos: darwin
+        goarch: amd64
+      - goos: linux
+        goarch: arm64
+
+archives:
+  - formats: ["tar.gz"]
+
+release:
+  draft: true
+
+gitea_urls:
+  api: https://gitea.darkeli.com/api/v1
+  download: https://gitea.darkeli.com
