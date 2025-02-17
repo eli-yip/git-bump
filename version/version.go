@@ -41,6 +41,11 @@ func (vm *VersionManager) FindCurrentVersion(tags []string) (*semver.Version, er
 		if err != nil {
 			continue
 		}
+
+		if v.Major() > 2000 {
+			continue
+		}
+
 		vs = append(vs, v)
 	}
 
