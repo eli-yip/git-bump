@@ -58,14 +58,17 @@ func (c *CLI) Run(args []string) error {
 	}
 	c.Git = repo
 
-	current, err := c.getCurrentVersion()
+	current, hasTags, err := c.getCurrentVersion()
 	if err != nil {
 		return err
 	}
 
-	tag, err := c.createNextVersion(current)
-	if err != nil {
-		return err
+	var tag string = c.Version.FormatVersion(current)
+	if hasTags {
+		tag, err = c.createNextVersion(current)
+		if err != nil {
+			return err
+		}
 	}
 
 	if err := c.Git.CreateTag(tag); err != nil {
@@ -77,26 +80,26 @@ func (c *CLI) Run(args []string) error {
 	return nil
 }
 
-func (c *CLI) getCurrentVersion() (*semver.Version, error) {
+func (c *CLI) getCurrentVersion() (*semver.Version, bool, error) {
 	tags, err := c.Git.GetTags()
 	if err != nil {
-		return nil, err
+		return nil, true, err
 	}
 
 	current, err := c.Version.FindCurrentVersion(tags)
 	if err != nil {
-		return nil, err
+		return nil, true, err
 	}
 
 	if current == nil {
 		v, err := c.Version.PromptVersion()
 		if err != nil {
-			return nil, fmt.Errorf("failed to create new version: %w", err)
+			return nil, false, fmt.Errorf("failed to create new version: %w", err)
 		}
-		return v, nil
+		return v, false, nil
 	}
 
-	return current, nil
+	return current, true, nil
 }
 
 func (c *CLI) createNextVersion(current *semver.Version) (string, error) {
