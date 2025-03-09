@@ -47,7 +47,11 @@ func (c *CLI) Run(args []string) error {
 		return nil
 	}
 
-	path := "."
+	path, err := git.FindGitRoot(".")
+	if err != nil {
+		return err
+	}
+
 	if len(args) > 0 {
 		path = args[0]
 	}

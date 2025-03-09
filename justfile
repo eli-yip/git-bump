@@ -1,5 +1,8 @@
 current_branch := `git branch --show-current`
 
+build:
+  go build -o git-bump .
+
 lint:
   golangci-lint run -v --timeout 5m
 

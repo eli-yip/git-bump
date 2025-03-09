@@ -2,6 +2,8 @@ package git
 
 import (
 	"errors"
+	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/Songmu/gitconfig"
@@ -27,6 +29,25 @@ func (r *Repository) GetTags() ([]string, error) {
 		return nil
 	})
 	return tags, err
+}
+
+func FindGitRoot(path string) (string, error) {
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return "", err
+	}
+
+	for {
+		if _, err := os.Stat(filepath.Join(path, ".git")); err == nil {
+			return path, nil
+		}
+
+		parent := filepath.Dir(path)
+		if parent == path {
+			return "", errors.New("fatal: not a git repository (or any parent up to root)")
+		}
+		path = parent
+	}
 }
 
 func Open(path string) (*Repository, error) {
