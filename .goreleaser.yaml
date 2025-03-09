@@ -8,9 +8,6 @@ builds:
     goarch: [arm64, amd64]
     ldflags:
       - -w -s -X "gitea.darkeli.com/yezi/git-bump/internal/version.Version={{ .Tag }}"
-    goamd64:
-      - v1
-      - v3
     ignore:
       - goos: darwin
         goarch: amd64
@@ -19,6 +16,8 @@ builds:
 
 archives:
   - formats: ["tar.gz"]
+    files:
+      - none*
 
 release:
   draft: true
